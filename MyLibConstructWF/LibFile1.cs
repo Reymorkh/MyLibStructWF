@@ -5,6 +5,7 @@ using static System.Windows.Forms.DataFormats;
 
 namespace MyLibStructWF
 {
+  [Serializable]
   public struct ArrayManagementWF
   {
     const double fromTop = 30, fromLeft = 60;
@@ -12,65 +13,8 @@ namespace MyLibStructWF
     public static List<TextBox> textBoxes = new List<TextBox>();
     public static List<Label> labels = new List<Label>();
 
-    static int Partition(int[] array, int minIndex, int maxIndex)
-    {
-      var pen = minIndex - 1;
-      for (var i = minIndex; i < maxIndex; i++)
-      {
-        if (array[i] > array[maxIndex])
-        {
-          pen++;
-          (array[pen], array[i]) = (array[i], array[pen]);
-        }
-      }
 
-      pen++;
-      (array[pen], array[maxIndex]) = (array[maxIndex], array[pen]);
-      return pen;
-    }
-
-    public static int[] HoarahSort(int[] array, int indexLeft, int indexRight)
-    {
-      if (indexLeft >= indexRight)
-      {
-        return array; //финальная сдача массива
-      }
-
-      var pivotIndex = Partition(array, indexLeft, indexRight); // определение опорного элемента в массиве и перестановка
-      HoarahSort(array, indexLeft, pivotIndex - 1); // сорт по краям от опорного элемента
-      HoarahSort(array, pivotIndex + 1, indexRight); // сорт по краям от опорного элемента
-
-      return array;
-    }
-
-    public static void FormInit(Form form)
-    {
-      form.ShowDialog();
-      form.Dispose();
-      textBoxes.Clear();
-      labels.Clear();
-    }
-
-    public static void AddBox(double posx, double posy)
-    {
-      TextBox newTextBox = new TextBox();
-      newTextBox.Location = new Point(40 + Convert.ToInt32(Math.Round(fromLeft * posx, 0)), 60 + Convert.ToInt32(Math.Round(fromTop * posy, 0)));
-      newTextBox.Size = size;
-      newTextBox.MaxLength = 5;
-      newTextBox.TextAlign = HorizontalAlignment.Center;
-      textBoxes.Add(newTextBox);
-    }
-
-    public static void AddLabel(double posx, double posy, int number)
-    {
-      Label newLabel = new Label();
-      newLabel.Location = new Point(40 + Convert.ToInt32(Math.Round(fromLeft * posx, 0)), 60 + Convert.ToInt32(Math.Round(fromTop * posy, 0)));
-      newLabel.Text = Convert.ToString(number);
-      newLabel.TextAlign = ContentAlignment.MiddleCenter;
-      newLabel.AutoSize = true;
-      labels.Add(newLabel);
-    }
-
+    [Serializable]
     public class OneDim
     {
       public int[] array = new int[0];
@@ -157,9 +101,12 @@ namespace MyLibStructWF
           MessageBox.Show("Массива нет", "Предупреждение");
       }
 
-      public int[] Copy() // для случаев, когда надо сделать не перменную-ссылку на другую переменную, а отдельный новый идентичный массив
+      public int[] Copy // для случаев, когда надо сделать не перменную-ссылку на другую переменную, а отдельный новый идентичный массив
       {
-        return array;
+        get
+        {
+          return array;
+        }
       }
       
       public int Length()
@@ -210,6 +157,7 @@ namespace MyLibStructWF
 
     }
 
+    [Serializable]
     public class TwoDim
     {
       public int[,] array = new int[0,0];
@@ -277,9 +225,12 @@ namespace MyLibStructWF
           MessageBox.Show("Массив пока не инициализирован.", "Ошибка");
       }
 
-      public int[,] Copy()
+      public int[,] Copy
       {
-        return array;
+        get
+        {
+          return array;
+        }
       }
 
       public int Length(int temp)
@@ -288,10 +239,8 @@ namespace MyLibStructWF
         {
           case 0:
             return array.GetLength(0);
-            break;
           case 1: 
             return array.GetLength(1);
-            break;
         }
         return -1;
       }
@@ -375,6 +324,7 @@ namespace MyLibStructWF
       }
     }
 
+    [Serializable]
     public class Torn
     {
       public int[][] array = new int[0][];
@@ -480,9 +430,12 @@ namespace MyLibStructWF
         MessageBox.Show("Массив записан");
       }
 
-      public int[][] Copy()
+      public int[][] Copy
       {
-        return array;
+        get
+        {
+          return array;
+        }
       }
 
       public bool OldArrayCheck(int[][] arrayLocal)
@@ -544,6 +497,64 @@ namespace MyLibStructWF
       }
     }
 
+    static int Partition(int[] array, int minIndex, int maxIndex)
+    {
+      var pen = minIndex - 1;
+      for (var i = minIndex; i < maxIndex; i++)
+      {
+        if (array[i] > array[maxIndex])
+        {
+          pen++;
+          (array[pen], array[i]) = (array[i], array[pen]);
+        }
+      }
+
+      pen++;
+      (array[pen], array[maxIndex]) = (array[maxIndex], array[pen]);
+      return pen;
+    }
+
+    public static int[] HoarahSort(int[] array, int indexLeft, int indexRight)
+    {
+      if (indexLeft >= indexRight)
+      {
+        return array; //финальная сдача массива
+      }
+
+      var pivotIndex = Partition(array, indexLeft, indexRight); // определение опорного элемента в массиве и перестановка
+      HoarahSort(array, indexLeft, pivotIndex - 1); // сорт по краям от опорного элемента
+      HoarahSort(array, pivotIndex + 1, indexRight); // сорт по краям от опорного элемента
+
+      return array;
+    }
+
+    public static void FormInit(Form form)
+    {
+      form.ShowDialog();
+      form.Dispose();
+      textBoxes.Clear();
+      labels.Clear();
+    }
+
+    public static void AddBox(double posx, double posy)
+    {
+      TextBox newTextBox = new TextBox();
+      newTextBox.Location = new Point(40 + Convert.ToInt32(Math.Round(fromLeft * posx, 0)), 60 + Convert.ToInt32(Math.Round(fromTop * posy, 0)));
+      newTextBox.Size = size;
+      newTextBox.MaxLength = 5;
+      newTextBox.TextAlign = HorizontalAlignment.Center;
+      textBoxes.Add(newTextBox);
+    }
+
+    public static void AddLabel(double posx, double posy, int number)
+    {
+      Label newLabel = new Label();
+      newLabel.Location = new Point(40 + Convert.ToInt32(Math.Round(fromLeft * posx, 0)), 60 + Convert.ToInt32(Math.Round(fromTop * posy, 0)));
+      newLabel.Text = Convert.ToString(number);
+      newLabel.TextAlign = ContentAlignment.MiddleCenter;
+      newLabel.AutoSize = true;
+      labels.Add(newLabel);
+    }
     public static string FileReader()
     {
       var fileContent = string.Empty;
